@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "starbond:block/binding_table"
+    },
+    "facing=south": {
+      "model": "starbond:block/binding_table",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "starbond:block/binding_table",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "starbond:block/binding_table",
+      "y": 90
+    }
+  }
+}
