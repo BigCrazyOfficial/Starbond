@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -35,7 +36,7 @@ public class Bond implements BondComponent{
     @Override
     public void addBondEntry(int i, UUID playerA, UUID playerB){
         if(!bondData.containsKey(i)){
-            bondData.put(i, new BondData(playerA, playerB, 0));
+            bondData.put(i, new BondData(playerA, playerB, 0, false, false, false, false));
         } else {
             Starbond.LOGGER.info("[Starbond] Bond exists with this ID already!");
         }
@@ -87,5 +88,21 @@ public class Bond implements BondComponent{
         );
     }
 
+    public static int getRandomIdentifier(HashMap<Integer, BondData> data){
+        Random random = new Random(data.hashCode());
+        int i;
+        while(true) {
+            i = random.nextInt(0, 1000000000);
+            if(!data.containsKey(i)){
+                return i;
+            }
+        }
+    }
 
+    @Override
+    public void tick() {
+        for(BondData data : bondData.values()){
+            data.tick();
+        }
+    }
 }

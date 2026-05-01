@@ -14,5 +14,15 @@ public class Components {
             Identifier.fromNamespaceAndPath(Starbond.MOD_ID, "locket_mode"),
             DataComponentType.<String>builder().persistent(Codec.STRING).build()
     );
+    public static final DataComponentType<String> LOCKET_TEXTURE = Registry.register(
+            BuiltInRegistries.DATA_COMPONENT_TYPE,
+            Identifier.fromNamespaceAndPath(Starbond.MOD_ID, "locket_texture"),
+            DataComponentType.<String>builder().persistent(Codec.STRING).build()
+    );
+    public static final DataComponentType<Integer> LOCKET_TICKS = Registry.register(
+            BuiltInRegistries.DATA_COMPONENT_TYPE,
+            Identifier.fromNamespaceAndPath(Starbond.MOD_ID, "locket_ticks"),
+            DataComponentType.<Integer>builder().persistent(Codec.INT).build()
+    );
     public static void initialize(){}
 }

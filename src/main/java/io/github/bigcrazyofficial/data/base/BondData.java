@@ -30,8 +30,12 @@ public class BondData implements MenuProvider {
     UUID playerB;
     SimpleContainer inventory;
     int camaraderieTicks;
+    boolean tickCamaraderie;
+    boolean suicideMode;
+    boolean playerAChanneling;
+    boolean playerBChanneling;
 
-    public BondData(UUID playerA, UUID playerB, List<ItemStack> items, int camaraderieTicks) {
+    public BondData(UUID playerA, UUID playerB, List<ItemStack> items, int camaraderieTicks, boolean tickCamaraderie, boolean suicideMode, boolean playerAChanneling, boolean playerBChanneling) {
         this.playerA = playerA;
         this.playerB = playerB;
         this.inventory = new SimpleContainer(5);
@@ -41,13 +45,21 @@ public class BondData implements MenuProvider {
             i++;
         }
         this.camaraderieTicks = camaraderieTicks;
+        this.tickCamaraderie = tickCamaraderie;
+        this.suicideMode = suicideMode;
+        this.playerAChanneling = playerAChanneling;
+        this.playerBChanneling = playerBChanneling;
     }
 
-    public BondData(UUID playerA, UUID playerB, int camaraderieTicks){
+    public BondData(UUID playerA, UUID playerB, int camaraderieTicks, boolean tickCamaraderie, boolean suicideMode, boolean playerAChanneling, boolean playerBChanneling){
         this.playerA = playerA;
         this.playerB = playerB;
         this.inventory = new SimpleContainer(5);
         this.camaraderieTicks = camaraderieTicks;
+        this.tickCamaraderie = tickCamaraderie;
+        this.suicideMode = suicideMode;
+        this.playerAChanneling = playerAChanneling;
+        this.playerBChanneling = playerBChanneling;
     }
 
     public UUID playerA(){ return playerA; }
@@ -55,16 +67,53 @@ public class BondData implements MenuProvider {
     public SimpleContainer inventory(){ return this.inventory; }
     public NonNullList<ItemStack> items(){ return this.inventory.getItems(); }
     public int camaraderieTicks(){ return this.camaraderieTicks; }
+    public boolean shouldTickCamaraderie(){ return this.tickCamaraderie; }
+    public boolean playerAChanneling(){ return this.playerAChanneling; }
+    public boolean playerBChanneling(){ return this.playerBChanneling; }
+    public boolean suicideMode(){ return this.suicideMode; }
+
     public static final MapCodec<BondData> MAP_CODEC = RecordCodecBuilder.mapCodec(
             i -> i.group(
                     UUIDUtil.CODEC.fieldOf("playerA").forGetter(BondData::playerA),
                     UUIDUtil.CODEC.fieldOf("playerB").forGetter(BondData::playerB),
                     ItemStack.OPTIONAL_CODEC.sizeLimitedListOf(5).fieldOf("items").forGetter(BondData::items),
-                    Codec.INT.fieldOf("camaraderieTicks").forGetter(BondData::camaraderieTicks)
+                    Codec.INT.fieldOf("camaraderieTicks").forGetter(BondData::camaraderieTicks),
+                    Codec.BOOL.fieldOf("shouldTickCamaraderie").forGetter(BondData::shouldTickCamaraderie),
+                    Codec.BOOL.fieldOf("suicideMode").forGetter(BondData::suicideMode),
+                    Codec.BOOL.fieldOf("playerAChanneling").forGetter(BondData::playerAChanneling),
+                    Codec.BOOL.fieldOf("playerBChanneling").forGetter(BondData::playerBChanneling)
             ).apply(i, BondData::new)
 
     );
 
+    public void tick(){
+        if(shouldTickCamaraderie()){
+            this.camaraderieTicks++;
+            this.tickCamaraderie = false;
+        } else {
+            this.camaraderieTicks--;
+        }
+        this.playerAChanneling = false;
+        this.playerBChanneling = false;
+    }
+
+    public void activateSuicideMode(){
+        suicideMode = true;
+    }
+    public void setTickCamaraderie(){
+        tickCamaraderie = true;
+    }
+
+    public void setPlayerAChanneling(boolean bool){
+        playerAChanneling = bool;
+    }
+    public void setPlayerBChanneling(boolean bool){
+        playerBChanneling = bool;
+    }
+
+    public boolean otherPlayerChanneling(UUID uuid){
+        return(uuid == playerA && playerBChanneling()) || (uuid == playerB && playerAChanneling());
+    }
     @Override
     public Component getDisplayName() {
         return Component.empty();

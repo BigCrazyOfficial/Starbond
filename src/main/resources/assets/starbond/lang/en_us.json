@@ -1,7 +1,12 @@
 {
   "item.starbond.starbond_locket": "Starbond Locket",
+  "item.starbond.unbound_locket": "Unbound Locket",
+  "item.starbond.locket.texture.red": "Red",
+  "item.starbond.locket.texture.blue": "Blue",
 
-  "block.starbond.binding_table": "Binding Table",
+  "effect.starbond.camaraderie": "Camaraderie",
 
-  "effect.starbond.camaraderie": "Camaraderie"
+  "sound.starbond.locket_shatter": "Locket Shatters",
+
+  "death.attack.channeled": "%1$s gave it their all"
 }

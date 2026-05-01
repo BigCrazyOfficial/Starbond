@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "starbond:item/starbond_locket"
+    "layer0": "starbond:item/unbound_locket"
   }
 }

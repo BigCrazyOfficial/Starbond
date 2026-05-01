@@ -1,0 +1,30 @@
+{
+  "model": {
+    "type": "minecraft:select",
+    "models": [
+      {
+        "type": "minecraft:select",
+        "property": "minecraft:component",
+        "component": "minecraft:block_entity_data"
+      }
+    ],
+    "property": "minecraft:component",
+    "component": "starbond:locket_texture",
+    "cases": [
+      {
+        "when": "red",
+        "model": {
+          "type": "minecraft:model",
+          "model": "starbond:item/starbond_locket_red"
+        }
+      },
+      {
+        "when": "blue",
+        "model": {
+          "type": "minecraft:model",
+          "model": "starbond:item/starbond_locket_blue"
+        }
+      }
+    ]
+  }
+}
