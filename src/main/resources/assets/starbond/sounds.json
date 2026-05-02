@@ -2,5 +2,9 @@
   "locket_shatter": {
     "subtitle": "sound.starbond.locket_shatter",
     "sounds": ["starbond:locket_shatter"]
+  },
+  "click_fancy": {
+    "subtitle": "sound.starbond.click_fancy",
+    "sounds": ["starbond:click_fancy"]
   }
 }

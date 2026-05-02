@@ -11,6 +11,7 @@ public class Sounds {
         return Registry.register(BuiltInRegistries.SOUND_EVENT, identifier, SoundEvent.createVariableRangeEvent(identifier));
     }
     public static final SoundEvent ITEM_LOCKET_SHATTER = registerSound("locket_shatter");
+    public static final SoundEvent UI_CLICK_FANCY = registerSound("click_fancy");
 
 
     public static void initialize() {

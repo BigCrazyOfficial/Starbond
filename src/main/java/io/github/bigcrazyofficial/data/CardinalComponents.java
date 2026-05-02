@@ -31,7 +31,7 @@ public class CardinalComponents implements EntityComponentInitializer, Scoreboar
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
         registry.beginRegistration(Player.class, BOND_REFERENCE)
-                .respawnStrategy(RespawnCopyStrategy.ALWAYS_COPY)
+                .respawnStrategy(RespawnCopyStrategy.CHARACTER)
                 .end(e -> new BondReference());
     }
 

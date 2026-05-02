@@ -1,12 +1,19 @@
 {
   "item.starbond.starbond_locket": "Starbond Locket",
   "item.starbond.unbound_locket": "Unbound Locket",
+
+  "item.starbond.starbond_locket.modeSwap": "Mode: %1$s",
+
   "item.starbond.locket.texture.red": "Red",
   "item.starbond.locket.texture.blue": "Blue",
+  "item.starbond.locket.texture.lime": "Lime",
+  "item.starbond.locket.texture.magenta": "Magenta",
 
   "effect.starbond.camaraderie": "Camaraderie",
 
-  "sound.starbond.locket_shatter": "Locket Shatters",
+  "sound.starbond.locket_shatter": "Locket shatters",
+  "sound.starbond.click_fancy": "Clicks fancily",
+
 
   "death.attack.channeled": "%1$s gave it their all"
 }

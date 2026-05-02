@@ -24,6 +24,20 @@
           "type": "minecraft:model",
           "model": "starbond:item/starbond_locket_blue"
         }
+      },
+      {
+        "when": "lime",
+        "model": {
+          "type": "minecraft:model",
+          "model": "starbond:item/starbond_locket_lime"
+        }
+      },
+      {
+        "when": "magenta",
+        "model": {
+          "type": "minecraft:model",
+          "model": "starbond:item/starbond_locket_magenta"
+        }
       }
     ]
   }

@@ -31,6 +31,6 @@ public class Items {
             .fireResistant()
             .useCooldown(0.5f)
             .component(Components.LOCKET_TICKS, 0)
-            .component(Components.LOCKET_MODE, "channel")
+            .component(Components.LOCKET_MODE, "store")
             .component(Components.LOCKET_TEXTURE, "red"));
 }

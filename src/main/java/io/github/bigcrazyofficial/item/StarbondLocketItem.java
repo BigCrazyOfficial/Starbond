@@ -9,8 +9,16 @@ import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentUtils;
+import net.minecraft.network.chat.ResolutionContext;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket;
+import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
+import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -34,10 +42,7 @@ import net.minecraft.world.scores.Scoreboard;
 import org.jetbrains.annotations.UnknownNullability;
 import org.jspecify.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class StarbondLocketItem extends Item  {
     private static String[] UPGRADES = {
@@ -59,54 +64,75 @@ public class StarbondLocketItem extends Item  {
                 return InteractionResult.FAIL;
             }
             data = board.getComponent(CardinalComponents.BOND).getBondEntry(player.getComponent(CardinalComponents.BOND_REFERENCE).getReference());
-            if (!player.isCrouching()) {
-                switch (stack.get(Components.LOCKET_MODE)) {
-                    case "store":
-                        this.locketStorage(level, player, stack, data);
-                    case "teleport":
-                        this.locketTP(level, player, stack, data);
-                    case "channel":
-                        if (!data.otherPlayerChanneling(player.getUUID())) {
-                            player.startUsingItem(hand);
-                        }
-                    case null:
-                    default:
+            if(player.isCrouching()) {
+                if(!level.isClientSide()) {
+                    swapUpgrade(stack, stack.get(Components.LOCKET_MODE), player, level);
+                    level.playSound(null, player.getOnPos(), Sounds.UI_CLICK_FANCY, SoundSource.PLAYERS, 1f, 0.9f);
+                    return InteractionResult.PASS;
                 }
             } else {
-                swapUpgrade(stack, stack.get(Components.LOCKET_MODE));
-                level.playPlayerSound(SoundEvents.UI_BUTTON_CLICK.value(), SoundSource.PLAYERS, 1f, 0.5f);
+                if (!level.isClientSide()) {
+                    switch (stack.get(Components.LOCKET_MODE)) {
+                        case "store":
+                            this.locketStorage(level, player, stack, data);
+                            break;
+                        case "teleport":
+                            if (!data.otherPlayerTeleporting(player.getUUID())) {
+                                this.locketTP(level, player, stack, data);
+                            }
+                            break;
+                        case "channel":
+                            if (!data.otherPlayerChanneling(player.getUUID())) {
+                                player.startUsingItem(hand);
+                            }
+                            break;
+                        case null:
+                            break;
+                        default:
+                            break;
+                    }
+                }
             }
             player.getCooldowns().addCooldown(stack, 10);
+            return InteractionResult.PASS;
         }
-        return InteractionResult.PASS;
+        return InteractionResult.FAIL;
     }
-    public void swapUpgrade(ItemStack stack, String active){
-        int pos = Arrays.asList(UPGRADES).indexOf(active);
-        if(pos++ < UPGRADES.length + 1){
-            pos = 0;
-        }
-        stack.set(Components.LOCKET_MODE, Arrays.asList(UPGRADES).get(pos--));
 
+    public void swapUpgrade(ItemStack stack, String active, Player player, Level level){
+        int pos = Arrays.asList(UPGRADES).indexOf(active);
+        String current = stack.get(Components.LOCKET_MODE);
+        if(Arrays.asList(UPGRADES).getLast().equals(current)){
+            pos = 0;
+        } else {
+            pos++;
+        }
+        stack.set(Components.LOCKET_MODE, Arrays.asList(UPGRADES).get(pos));
+        if(!level.isClientSide() && player instanceof ServerPlayer serverPlayer){
+            serverPlayer.connection
+                    .send(new ClientboundSetActionBarTextPacket(Component.translatable("item.starbond.starbond_locket.modeSwap", Objects.requireNonNull(stack.get(Components.LOCKET_MODE)).toUpperCase())));
+        }
     }
     public void locketStorage(Level level, Player player, ItemStack stack, BondData data) {
         player.openMenu(data);
     }
+    public void initTP(Level level, Player player, BondData data){
 
+    }
     public void locketTP(Level level, Player player, ItemStack stack, BondData data) {
         UUID playerA = data.playerA();
         UUID playerB = data.playerB();
         if (level.getPlayerInAnyDimension(playerA) != null && level.getPlayerInAnyDimension(playerB) != null) {
             if (level instanceof ServerLevel && player instanceof ServerPlayer) {
                 Player teleportTo = level.getPlayerInAnyDimension(whom(playerA, playerB, player).get(1));
-                Starbond.LOGGER.info(String.valueOf(teleportTo.getUUID().toString()));
                 player.teleport(new TeleportTransition(
-                        (ServerLevel) level,
+                        (ServerLevel) teleportTo.level(),
                         teleportTo.position(),
                         Vec3.ZERO,
                         0.0f, 0.0f,
                         Relative.union(Relative.ROTATION, Relative.DELTA), TeleportTransition.DO_NOTHING
                 ));
-                level.playLocalSound(player, SoundEvents.PLAYER_TELEPORT, SoundSource.PLAYERS, 1.0f, 1.0f);
+                level.playPlayerSound(SoundEvents.PLAYER_TELEPORT, SoundSource.PLAYERS, 1.0f, 1.0f);
                 player.resetFallDistance();
                 player.resetCurrentImpulseContext();
             }
@@ -130,7 +156,8 @@ public class StarbondLocketItem extends Item  {
                 UUID other = whom(playerA, playerB, owner).get(1);
                 float dist = owner.distanceTo(level.getPlayerInAnyDimension(other));
                 if (dist <= 50.0f && level.getPlayerInAnyDimension(other) != null) {
-                    ((Player) owner).addEffect(new MobEffectInstance(Starbond.CAMARADERIE, MobEffectInstance.INFINITE_DURATION, 0));
+                    int amp = this.getCamaraderieAmp(itemStack.get(Components.LOCKET_TICKS));
+                    ((Player) owner).addEffect(new MobEffectInstance(Starbond.CAMARADERIE, MobEffectInstance.INFINITE_DURATION, amp));
                     data.setTickCamaraderie();
                     itemStack.set(Components.LOCKET_TICKS, data.camaraderieTicks());
                 } else {
@@ -147,9 +174,12 @@ public class StarbondLocketItem extends Item  {
     public void onUseTick(final Level level, final LivingEntity livingEntity, final ItemStack itemStack, final int ticksRemaining) {
         if (!level.isClientSide()) {
             BondData data = level.getScoreboard().getComponent(CardinalComponents.BOND).getBondEntry(livingEntity.getComponent(CardinalComponents.BOND_REFERENCE).getReference());
+            Starbond.LOGGER.info("horse 55");
             if (whom(data.playerA(), data.playerB(), livingEntity).getFirst() == data.playerA()) {
+                Starbond.LOGGER.info("horse 333");
                 data.setPlayerAChanneling(true);
             } else {
+                Starbond.LOGGER.info("horse 999");
                 data.setPlayerBChanneling(true);
             }
         }
@@ -198,7 +228,19 @@ public class StarbondLocketItem extends Item  {
 
         }
     }
-
+    public int getCamaraderieAmp(int ticks){
+        if(ticks <= 12000){
+            return 0;
+        } else if(ticks <= 36000){
+            return 1;
+        } else if(ticks <= 60000){
+            return 2;
+        } else if(ticks <= 96000){
+            return 4;
+        } else {
+            return 0;
+        }
+    }
     @Override
     public ItemUseAnimation getUseAnimation(final ItemStack itemStack) {
         return ItemUseAnimation.BLOCK;

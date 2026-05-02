@@ -32,7 +32,7 @@ public class Starbond implements ModInitializer {
 							.addAttributeModifier(
 									Attributes.MOVEMENT_SPEED,
 									Identifier.fromNamespaceAndPath(MOD_ID, "effect.camaraderie.movement_speed"),
-									0.1F,
+									0.075F,
 									AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
 									)
 							.addAttributeModifier(Attributes.MINING_EFFICIENCY,

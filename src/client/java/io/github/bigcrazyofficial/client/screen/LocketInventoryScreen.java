@@ -10,7 +10,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 public class LocketInventoryScreen extends AbstractContainerScreen<LocketInventoryMenu> {
-    private static final Identifier CONTAINER_TEXTURE = Identifier.fromNamespaceAndPath(Starbond.MOD_ID, "textures/gui/container/locket_inv_temp.png");
+    private static final Identifier CONTAINER_TEXTURE = Identifier.fromNamespaceAndPath(Starbond.MOD_ID, "textures/gui/container/locket_inv.png");
     public LocketInventoryScreen(LocketInventoryMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
     }
