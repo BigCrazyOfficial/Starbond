@@ -36,7 +36,7 @@ public class Bond implements BondComponent{
     @Override
     public void addBondEntry(int i, UUID playerA, UUID playerB){
         if(!bondData.containsKey(i)){
-            bondData.put(i, new BondData(playerA, playerB, 0, false, -1, -1, false, false, false));
+            bondData.put(i, new BondData(playerA, playerB, 0, false, -1, -1, 0, false, false, false));
         } else {
             Starbond.LOGGER.info("[Starbond] Bond exists with this ID already!");
         }

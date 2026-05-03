@@ -3,6 +3,8 @@
   "item.starbond.unbound_locket": "Unbound Locket",
 
   "item.starbond.starbond_locket.modeSwap": "Mode: %1$s",
+  "item.starbond.starbond_locket.friendIncoming": "!! %1$s incoming !!",
+  "item.starbond.starbond_locket.teleportCooldown": "Teleport on cooldown!",
 
   "item.starbond.locket.texture.red": "Red",
   "item.starbond.locket.texture.blue": "Blue",

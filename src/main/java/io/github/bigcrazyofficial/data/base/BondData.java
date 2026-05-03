@@ -33,11 +33,12 @@ public class BondData implements MenuProvider {
     boolean tickCamaraderie;
     int playerATeleportTimer;
     int playerBTeleportTimer;
+    int teleportCooldown;
     boolean suicideMode;
     boolean playerAChanneling;
     boolean playerBChanneling;
 
-    public BondData(UUID playerA, UUID playerB, List<ItemStack> items, int camaraderieTicks, boolean tickCamaraderie, int playerATeleportTimer, int playerBTeleportTimer, boolean suicideMode, boolean playerAChanneling, boolean playerBChanneling) {
+    public BondData(UUID playerA, UUID playerB, List<ItemStack> items, int camaraderieTicks, boolean tickCamaraderie, int playerATeleportTimer, int playerBTeleportTimer, int teleportCooldown, boolean suicideMode, boolean playerAChanneling, boolean playerBChanneling) {
         this.playerA = playerA;
         this.playerB = playerB;
         this.inventory = new SimpleContainer(5);
@@ -50,12 +51,13 @@ public class BondData implements MenuProvider {
         this.tickCamaraderie = tickCamaraderie;
         this.playerATeleportTimer = playerATeleportTimer;
         this.playerBTeleportTimer = playerBTeleportTimer;
+        this.teleportCooldown = teleportCooldown;
         this.suicideMode = suicideMode;
         this.playerAChanneling = playerAChanneling;
         this.playerBChanneling = playerBChanneling;
     }
 
-    public BondData(UUID playerA, UUID playerB, int camaraderieTicks, boolean tickCamaraderie,  int playerATeleportTimer, int playerBTeleportTimer, boolean suicideMode, boolean playerAChanneling, boolean playerBChanneling){
+    public BondData(UUID playerA, UUID playerB, int camaraderieTicks, boolean tickCamaraderie,  int playerATeleportTimer, int playerBTeleportTimer, int teleportCooldown, boolean suicideMode, boolean playerAChanneling, boolean playerBChanneling){
         this.playerA = playerA;
         this.playerB = playerB;
         this.inventory = new SimpleContainer(5);
@@ -63,6 +65,7 @@ public class BondData implements MenuProvider {
         this.tickCamaraderie = tickCamaraderie;
         this.playerATeleportTimer = playerATeleportTimer;
         this.playerBTeleportTimer = playerBTeleportTimer;
+        this.teleportCooldown = teleportCooldown;
         this.suicideMode = suicideMode;
         this.playerAChanneling = playerAChanneling;
         this.playerBChanneling = playerBChanneling;
@@ -75,7 +78,7 @@ public class BondData implements MenuProvider {
     public int camaraderieTicks(){ return this.camaraderieTicks; }
     public int playerATeleportTimer(){ return this.playerATeleportTimer; }
     public int playerBTeleportTimer(){ return this.playerBTeleportTimer; }
-
+    public int teleportCooldown(){ return this.teleportCooldown; }
     public boolean shouldTickCamaraderie(){ return this.tickCamaraderie; }
     public boolean playerAChanneling(){ return this.playerAChanneling; }
     public boolean playerBChanneling(){ return this.playerBChanneling; }
@@ -90,6 +93,7 @@ public class BondData implements MenuProvider {
                     Codec.BOOL.fieldOf("shouldTickCamaraderie").forGetter(BondData::shouldTickCamaraderie),
                     Codec.INT.fieldOf("playerATeleportTimer").forGetter(BondData::playerATeleportTimer),
                     Codec.INT.fieldOf("playerBTeleportTimer").forGetter(BondData::playerBTeleportTimer),
+                    Codec.INT.fieldOf("teleportCooldown").forGetter(BondData::teleportCooldown),
                     Codec.BOOL.fieldOf("suicideMode").forGetter(BondData::suicideMode),
                     Codec.BOOL.fieldOf("playerAChanneling").forGetter(BondData::playerAChanneling),
                     Codec.BOOL.fieldOf("playerBChanneling").forGetter(BondData::playerBChanneling)
@@ -109,12 +113,22 @@ public class BondData implements MenuProvider {
             this.tickTeleportTimer();
         }
 
+        if(teleportCooldown > 0){
+            this.teleportCooldown--;
+        }
+        Starbond.LOGGER.info(String.valueOf(teleportCooldown));
         this.playerAChanneling = false;
         this.playerBChanneling = false;
     }
-    public void tickTeleportTimer(){
 
+    public void tickTeleportTimer(){
+        if(playerATeleportTimer > -1){
+            playerATeleportTimer--;
+        } else if(playerBTeleportTimer > -1){
+            playerBTeleportTimer--;
+        }
     }
+
     public void activateSuicideMode(){
         suicideMode = true;
     }
@@ -129,6 +143,15 @@ public class BondData implements MenuProvider {
         playerBChanneling = bool;
     }
 
+    public void setPlayerATeleportTimer(int i){
+        playerATeleportTimer = i;
+    }
+    public void setPlayerBTeleportTimer(int i){
+        playerBTeleportTimer = i;
+    }
+    public void setTeleportCooldown(int i){
+        teleportCooldown = i;
+    }
     public boolean otherPlayerChanneling(UUID uuid){
         return(uuid == playerA && playerBChanneling()) || (uuid == playerB && playerAChanneling());
     }

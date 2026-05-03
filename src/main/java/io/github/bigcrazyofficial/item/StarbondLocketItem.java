@@ -5,6 +5,7 @@ import io.github.bigcrazyofficial.Starbond;
 import io.github.bigcrazyofficial.data.CardinalComponents;
 import io.github.bigcrazyofficial.data.base.BondData;
 import io.github.bigcrazyofficial.item.data.Components;
+import io.github.bigcrazyofficial.item.helper.LocketTooltipHelper;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.minecraft.core.component.DataComponents;
@@ -54,6 +55,8 @@ public class StarbondLocketItem extends Item  {
         super(properties);
     }
 
+    //at this point, even I'm not sure all how this works
+
     @Override
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
@@ -78,7 +81,15 @@ public class StarbondLocketItem extends Item  {
                             break;
                         case "teleport":
                             if (!data.otherPlayerTeleporting(player.getUUID())) {
-                                this.locketTP(level, player, stack, data);
+                                if(data.teleportCooldown() <= 0){
+                                    this.initTP(level, player, data);
+                                } else {
+                                    if(!level.isClientSide() && player instanceof ServerPlayer serverPlayer){
+                                        serverPlayer.connection
+                                                .send(new ClientboundSetActionBarTextPacket(Component.translatable("item.starbond.starbond_locket.teleportCooldown")
+                                                        .withColor(LocketTooltipHelper.LOCKET_TOOLTIP_COLORS.get(stack.get(Components.LOCKET_TEXTURE)))));
+                                    }
+                                }
                             }
                             break;
                         case "channel":
@@ -86,9 +97,7 @@ public class StarbondLocketItem extends Item  {
                                 player.startUsingItem(hand);
                             }
                             break;
-                        case null:
-                            break;
-                        default:
+                        case null, default:
                             break;
                     }
                 }
@@ -116,10 +125,26 @@ public class StarbondLocketItem extends Item  {
     public void locketStorage(Level level, Player player, ItemStack stack, BondData data) {
         player.openMenu(data);
     }
-    public void initTP(Level level, Player player, BondData data){
 
+    public void initTP(Level level, Player player, BondData data){
+        if (whom(data.playerA(), data.playerB(), player).getFirst() == data.playerA()) {
+            data.setPlayerATeleportTimer(120);
+        } else {
+            data.setPlayerBTeleportTimer(120);
+        }
     }
-    public void locketTP(Level level, Player player, ItemStack stack, BondData data) {
+
+    public void finishTP(Level level, Player player, BondData data){
+        if (whom(data.playerA(), data.playerB(), player).getFirst() == data.playerA()) {
+            data.setPlayerATeleportTimer(-1);
+        } else {
+            data.setPlayerBTeleportTimer(-1);
+        }
+        this.locketTP(level, player, data);
+        data.setTeleportCooldown(1200);
+    }
+
+    public void locketTP(Level level, Player player, BondData data) {
         UUID playerA = data.playerA();
         UUID playerB = data.playerB();
         if (level.getPlayerInAnyDimension(playerA) != null && level.getPlayerInAnyDimension(playerB) != null) {
@@ -132,7 +157,7 @@ public class StarbondLocketItem extends Item  {
                         0.0f, 0.0f,
                         Relative.union(Relative.ROTATION, Relative.DELTA), TeleportTransition.DO_NOTHING
                 ));
-                level.playPlayerSound(SoundEvents.PLAYER_TELEPORT, SoundSource.PLAYERS, 1.0f, 1.0f);
+                level.playSound(null, teleportTo.getOnPos(), SoundEvents.PLAYER_TELEPORT, SoundSource.PLAYERS, 1.0f, 1.0f);
                 player.resetFallDistance();
                 player.resetCurrentImpulseContext();
             }
@@ -153,6 +178,18 @@ public class StarbondLocketItem extends Item  {
             if (owner instanceof Player &&
                     level.getPlayerInAnyDimension(playerA) != null &&
                     level.getPlayerInAnyDimension(playerB) != null) {
+                if(data.playerATeleportTimer() == 0 || data.playerBTeleportTimer() == 0){
+                    if(data.otherPlayerTeleporting(owner.getUUID())) {
+                        finishTP(level, (Player) owner, data);
+                    }
+                } else if((data.playerATeleportTimer() % 20 == 0 || data.playerBTeleportTimer() % 20 == 0) && data.otherPlayerTeleporting(owner.getUUID())){
+                    level.playSound(null, owner.getOnPos(), Sounds.UI_CLICK_FANCY, SoundSource.PLAYERS, 0.5f, 0.9f );
+                    if(owner instanceof ServerPlayer player){
+                        player.connection
+                                .send(new ClientboundSetActionBarTextPacket(Component.translatable("item.starbond.starbond_locket.friendIncoming", owner.getName())
+                                        .withColor(LocketTooltipHelper.LOCKET_TOOLTIP_COLORS.get(itemStack.get(Components.LOCKET_TEXTURE)))));
+                    }
+                }
                 UUID other = whom(playerA, playerB, owner).get(1);
                 float dist = owner.distanceTo(level.getPlayerInAnyDimension(other));
                 if (dist <= 50.0f && level.getPlayerInAnyDimension(other) != null) {
@@ -174,12 +211,9 @@ public class StarbondLocketItem extends Item  {
     public void onUseTick(final Level level, final LivingEntity livingEntity, final ItemStack itemStack, final int ticksRemaining) {
         if (!level.isClientSide()) {
             BondData data = level.getScoreboard().getComponent(CardinalComponents.BOND).getBondEntry(livingEntity.getComponent(CardinalComponents.BOND_REFERENCE).getReference());
-            Starbond.LOGGER.info("horse 55");
             if (whom(data.playerA(), data.playerB(), livingEntity).getFirst() == data.playerA()) {
-                Starbond.LOGGER.info("horse 333");
                 data.setPlayerAChanneling(true);
             } else {
-                Starbond.LOGGER.info("horse 999");
                 data.setPlayerBChanneling(true);
             }
         }
