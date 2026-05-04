@@ -116,7 +116,6 @@ public class BondData implements MenuProvider {
         if(teleportCooldown > 0){
             this.teleportCooldown--;
         }
-        Starbond.LOGGER.info(String.valueOf(teleportCooldown));
         this.playerAChanneling = false;
         this.playerBChanneling = false;
     }

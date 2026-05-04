@@ -18,13 +18,10 @@ public class ChannelPreventDamageEvent {
         ServerLivingEntityEvents.ALLOW_DAMAGE.register((entity, source, v) -> {
             Level level = entity.level();
             if(entity instanceof Player && !level.isClientSide()) {
-                Starbond.LOGGER.info("horse 16");
                 BondData data = level.getScoreboard().getComponent(CardinalComponents.BOND).getBondEntry(entity.getComponent(CardinalComponents.BOND_REFERENCE).getReference());
                 if (data != null) {
-                    Starbond.LOGGER.info("horse 5");
                     UUID uuid = entity.getUUID();
                     if(data.otherPlayerChanneling(uuid)) {
-                        Starbond.LOGGER.info(String.valueOf(data.otherPlayerChanneling(uuid)));
                         Player other = level.getPlayerInAnyDimension(StarbondPendantItem.whom(data.playerA(), data.playerB(), entity).get(1));
                         assert other != null;
                         other.hurtServer((ServerLevel) level, new DamageSource(
@@ -42,13 +39,10 @@ public class ChannelPreventDamageEvent {
         ServerLivingEntityEvents.ALLOW_DEATH.register(((entity, damageSource, damageAmount) -> {
             Level level = entity.level();
             if(entity instanceof Player && !level.isClientSide()) {
-                Starbond.LOGGER.info("horse 80");
                 BondData data = level.getScoreboard().getComponent(CardinalComponents.BOND).getBondEntry(entity.getComponent(CardinalComponents.BOND_REFERENCE).getReference());
                 if (data != null) {
-                    Starbond.LOGGER.info("horse 6");
                     UUID uuid = entity.getUUID();
                     if (data.otherPlayerChanneling(uuid)) {
-                        Starbond.LOGGER.info("horse 95");
                         entity.setHealth(5.0f);
                         entity.setAbsorptionAmount(10f);
                         Player other = level.getPlayerInAnyDimension(StarbondPendantItem.whom(data.playerA(), data.playerB(), entity).get(1));
