@@ -3,7 +3,7 @@ package io.github.bigcrazyofficial.item.event;
 import io.github.bigcrazyofficial.Starbond;
 import io.github.bigcrazyofficial.data.CardinalComponents;
 import io.github.bigcrazyofficial.data.base.BondData;
-import io.github.bigcrazyofficial.item.StarbondLocketItem;
+import io.github.bigcrazyofficial.item.StarbondPendantItem;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
@@ -25,7 +25,7 @@ public class ChannelPreventDamageEvent {
                     UUID uuid = entity.getUUID();
                     if(data.otherPlayerChanneling(uuid)) {
                         Starbond.LOGGER.info(String.valueOf(data.otherPlayerChanneling(uuid)));
-                        Player other = level.getPlayerInAnyDimension(StarbondLocketItem.whom(data.playerA(), data.playerB(), entity).get(1));
+                        Player other = level.getPlayerInAnyDimension(StarbondPendantItem.whom(data.playerA(), data.playerB(), entity).get(1));
                         assert other != null;
                         other.hurtServer((ServerLevel) level, new DamageSource(
                                 level.registryAccess()
@@ -51,7 +51,7 @@ public class ChannelPreventDamageEvent {
                         Starbond.LOGGER.info("horse 95");
                         entity.setHealth(5.0f);
                         entity.setAbsorptionAmount(10f);
-                        Player other = level.getPlayerInAnyDimension(StarbondLocketItem.whom(data.playerA(), data.playerB(), entity).get(1));
+                        Player other = level.getPlayerInAnyDimension(StarbondPendantItem.whom(data.playerA(), data.playerB(), entity).get(1));
                         assert other != null;
                         other.hurtServer((ServerLevel) level, new DamageSource(
                                 level.registryAccess()

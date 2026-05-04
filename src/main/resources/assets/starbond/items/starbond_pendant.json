@@ -9,34 +9,34 @@
       }
     ],
     "property": "minecraft:component",
-    "component": "starbond:locket_texture",
+    "component": "starbond:pendant_texture",
     "cases": [
       {
         "when": "red",
         "model": {
           "type": "minecraft:model",
-          "model": "starbond:item/starbond_locket_red"
+          "model": "starbond:item/starbond_pendant_red"
         }
       },
       {
         "when": "blue",
         "model": {
           "type": "minecraft:model",
-          "model": "starbond:item/starbond_locket_blue"
+          "model": "starbond:item/starbond_pendant_blue"
         }
       },
       {
         "when": "lime",
         "model": {
           "type": "minecraft:model",
-          "model": "starbond:item/starbond_locket_lime"
+          "model": "starbond:item/starbond_pendant_lime"
         }
       },
       {
         "when": "magenta",
         "model": {
           "type": "minecraft:model",
-          "model": "starbond:item/starbond_locket_magenta"
+          "model": "starbond:item/starbond_pendant_magenta"
         }
       }
     ]

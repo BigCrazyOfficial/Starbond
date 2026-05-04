@@ -1,19 +1,19 @@
 {
-  "item.starbond.starbond_locket": "Starbond Locket",
-  "item.starbond.unbound_locket": "Unbound Locket",
+  "item.starbond.starbond_pendant": "Starbond Pendant",
+  "item.starbond.unbound_pendant": "Unbound Pendant",
 
-  "item.starbond.starbond_locket.modeSwap": "Mode: %1$s",
-  "item.starbond.starbond_locket.friendIncoming": "!! %1$s incoming !!",
-  "item.starbond.starbond_locket.teleportCooldown": "Teleport on cooldown!",
+  "item.starbond.starbond_pendant.modeSwap": "Mode: %1$s",
+  "item.starbond.starbond_pendant.friendIncoming": "!! %1$s incoming !!",
+  "item.starbond.starbond_pendant.teleportCooldown": "Teleport on cooldown!",
 
-  "item.starbond.locket.texture.red": "Red",
-  "item.starbond.locket.texture.blue": "Blue",
-  "item.starbond.locket.texture.lime": "Lime",
-  "item.starbond.locket.texture.magenta": "Magenta",
+  "item.starbond.pendant.texture.red": "Red",
+  "item.starbond.pendant.texture.blue": "Blue",
+  "item.starbond.pendant.texture.lime": "Lime",
+  "item.starbond.pendant.texture.magenta": "Magenta",
 
   "effect.starbond.camaraderie": "Camaraderie",
 
-  "sound.starbond.locket_shatter": "Locket shatters",
+  "sound.starbond.pendant_shatter": "Pendant shatters",
   "sound.starbond.click_fancy": "Clicks fancily",
 
 

@@ -8,7 +8,7 @@ import net.minecraft.world.inventory.MenuType;
 
 public class MenuTypes {
 
-    public static final MenuType<LocketInventoryMenu> LOCKET_INVENTORY = register("locket_inventory", LocketInventoryMenu::new);
+    public static final MenuType<PendantInventoryMenu> PENDANT_INVENTORY = register("pendant_inventory", PendantInventoryMenu::new);
     public static <T extends AbstractContainerMenu> MenuType<T> register(
             String name,
             MenuType.MenuSupplier<T> constructor

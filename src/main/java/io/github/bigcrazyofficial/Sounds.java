@@ -10,9 +10,9 @@ public class Sounds {
         Identifier identifier = Identifier.fromNamespaceAndPath(Starbond.MOD_ID, id);
         return Registry.register(BuiltInRegistries.SOUND_EVENT, identifier, SoundEvent.createVariableRangeEvent(identifier));
     }
-    public static final SoundEvent ITEM_LOCKET_SHATTER = registerSound("locket_shatter");
+    public static final SoundEvent ITEM_PENDANT_SHATTER = registerSound("pendant_shatter");
     public static final SoundEvent UI_CLICK_FANCY = registerSound("click_fancy");
-
+    public static final SoundEvent ENTITY_TELEPORT_FANCY = registerSound("teleport_fancy");
 
     public static void initialize() {
     }

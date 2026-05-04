@@ -9,15 +9,15 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
-public class LocketInventoryMenu extends AbstractContainerMenu {
+public class PendantInventoryMenu extends AbstractContainerMenu {
     private final Container container;
 
-    public LocketInventoryMenu(final int containerId, final Inventory inventory) {
+    public PendantInventoryMenu(final int containerId, final Inventory inventory) {
         this(containerId, inventory, new SimpleContainer(5));
     }
 
-    public LocketInventoryMenu(final int containerId, final Inventory inventory, final Container container) {
-        super(MenuTypes.LOCKET_INVENTORY, containerId);
+    public PendantInventoryMenu(final int containerId, final Inventory inventory, final Container container) {
+        super(MenuTypes.PENDANT_INVENTORY, containerId);
         checkContainerSize(container, 5);
         this.container = container;
 

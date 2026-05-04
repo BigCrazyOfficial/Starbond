@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "starbond:item/starbond_locket_lime"
+    "layer0": "starbond:item/starbond_pendant_magenta"
   }
 }

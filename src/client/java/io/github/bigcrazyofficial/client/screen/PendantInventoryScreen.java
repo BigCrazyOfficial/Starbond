@@ -1,7 +1,7 @@
 package io.github.bigcrazyofficial.client.screen;
 
 import io.github.bigcrazyofficial.Starbond;
-import io.github.bigcrazyofficial.menu.LocketInventoryMenu;
+import io.github.bigcrazyofficial.menu.PendantInventoryMenu;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -9,9 +9,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
-public class LocketInventoryScreen extends AbstractContainerScreen<LocketInventoryMenu> {
-    private static final Identifier CONTAINER_TEXTURE = Identifier.fromNamespaceAndPath(Starbond.MOD_ID, "textures/gui/container/locket_inv.png");
-    public LocketInventoryScreen(LocketInventoryMenu menu, Inventory inventory, Component title) {
+public class PendantInventoryScreen extends AbstractContainerScreen<PendantInventoryMenu> {
+    private static final Identifier CONTAINER_TEXTURE = Identifier.fromNamespaceAndPath(Starbond.MOD_ID, "textures/gui/container/pendant_inv.png");
+    public PendantInventoryScreen(PendantInventoryMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
     }
 

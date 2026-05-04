@@ -18,6 +18,6 @@ public class StarbondModelProvider extends FabricModelProvider {
 
     @Override
     public void generateItemModels(ItemModelGenerators itemModelGenerators) {
-        itemModelGenerators.generateFlatItem(Items.UNBOUND_LOCKET, ModelTemplates.FLAT_ITEM);
+        itemModelGenerators.generateFlatItem(Items.UNBOUND_PENDANT, ModelTemplates.FLAT_ITEM);
     }
 }

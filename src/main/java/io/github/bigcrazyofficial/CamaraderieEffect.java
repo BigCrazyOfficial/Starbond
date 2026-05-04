@@ -18,7 +18,7 @@ public class CamaraderieEffect extends MobEffect {
     public boolean applyEffectTick(final ServerLevel serverLevel, final LivingEntity mob, final int amplification) {
         Player player = (Player) mob;
         //Don't question it.
-        if(!player.getInventory().hasAnyOf(Set.of(Items.STARBOND_LOCKET))){
+        if(!player.getInventory().hasAnyOf(Set.of(Items.STARBOND_PENDANT))){
             player.removeEffect(Starbond.CAMARADERIE);
         }
         return super.applyEffectTick(serverLevel, mob, amplification);

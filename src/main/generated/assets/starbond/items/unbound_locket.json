@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "starbond:item/unbound_locket"
+    "model": "starbond:item/unbound_pendant"
   }
 }

@@ -9,19 +9,19 @@ import net.minecraft.resources.Identifier;
 
 public class Components {
     //not to be confused with CardinalComponents
-    public static final DataComponentType<String> LOCKET_MODE = Registry.register(
+    public static final DataComponentType<String> PENDANT_MODE = Registry.register(
             BuiltInRegistries.DATA_COMPONENT_TYPE,
-            Identifier.fromNamespaceAndPath(Starbond.MOD_ID, "locket_mode"),
+            Identifier.fromNamespaceAndPath(Starbond.MOD_ID, "pendant_mode"),
             DataComponentType.<String>builder().persistent(Codec.STRING).build()
     );
-    public static final DataComponentType<String> LOCKET_TEXTURE = Registry.register(
+    public static final DataComponentType<String> PENDANT_TEXTURE = Registry.register(
             BuiltInRegistries.DATA_COMPONENT_TYPE,
-            Identifier.fromNamespaceAndPath(Starbond.MOD_ID, "locket_texture"),
+            Identifier.fromNamespaceAndPath(Starbond.MOD_ID, "pendant_texture"),
             DataComponentType.<String>builder().persistent(Codec.STRING).build()
     );
-    public static final DataComponentType<Integer> LOCKET_TICKS = Registry.register(
+    public static final DataComponentType<Integer> PENDANT_TICKS = Registry.register(
             BuiltInRegistries.DATA_COMPONENT_TYPE,
-            Identifier.fromNamespaceAndPath(Starbond.MOD_ID, "locket_ticks"),
+            Identifier.fromNamespaceAndPath(Starbond.MOD_ID, "pendant_ticks"),
             DataComponentType.<Integer>builder().persistent(Codec.INT).build()
     );
     public static void initialize(){}

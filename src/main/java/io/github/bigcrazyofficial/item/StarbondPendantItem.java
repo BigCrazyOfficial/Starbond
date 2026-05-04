@@ -5,10 +5,11 @@ import io.github.bigcrazyofficial.Starbond;
 import io.github.bigcrazyofficial.data.CardinalComponents;
 import io.github.bigcrazyofficial.data.base.BondData;
 import io.github.bigcrazyofficial.item.data.Components;
-import io.github.bigcrazyofficial.item.helper.LocketTooltipHelper;
+import io.github.bigcrazyofficial.item.helper.PendantTooltipHelper;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
@@ -45,18 +46,17 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
-public class StarbondLocketItem extends Item  {
+public class StarbondPendantItem extends Item  {
     private static String[] UPGRADES = {
             "store",
             "teleport",
             "channel"
     };
-    public StarbondLocketItem(Properties properties) {
+    public StarbondPendantItem(Properties properties) {
         super(properties);
     }
 
     //at this point, even I'm not sure all how this works
-
     @Override
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
@@ -69,15 +69,15 @@ public class StarbondLocketItem extends Item  {
             data = board.getComponent(CardinalComponents.BOND).getBondEntry(player.getComponent(CardinalComponents.BOND_REFERENCE).getReference());
             if(player.isCrouching()) {
                 if(!level.isClientSide()) {
-                    swapUpgrade(stack, stack.get(Components.LOCKET_MODE), player, level);
+                    swapUpgrade(stack, stack.get(Components.PENDANT_MODE), player, level);
                     level.playSound(null, player.getOnPos(), Sounds.UI_CLICK_FANCY, SoundSource.PLAYERS, 1f, 0.9f);
                     return InteractionResult.PASS;
                 }
             } else {
                 if (!level.isClientSide()) {
-                    switch (stack.get(Components.LOCKET_MODE)) {
+                    switch (stack.get(Components.PENDANT_MODE)) {
                         case "store":
-                            this.locketStorage(level, player, stack, data);
+                            this.pendantStorage(level, player, stack, data);
                             break;
                         case "teleport":
                             if (!data.otherPlayerTeleporting(player.getUUID())) {
@@ -86,8 +86,8 @@ public class StarbondLocketItem extends Item  {
                                 } else {
                                     if(!level.isClientSide() && player instanceof ServerPlayer serverPlayer){
                                         serverPlayer.connection
-                                                .send(new ClientboundSetActionBarTextPacket(Component.translatable("item.starbond.starbond_locket.teleportCooldown")
-                                                        .withColor(LocketTooltipHelper.LOCKET_TOOLTIP_COLORS.get(stack.get(Components.LOCKET_TEXTURE)))));
+                                                .send(new ClientboundSetActionBarTextPacket(Component.translatable("item.starbond.starbond_pendant.teleportCooldown")
+                                                        .withColor(PendantTooltipHelper.PENDANT_TOOLTIP_COLORS.get(stack.get(Components.PENDANT_TEXTURE)))));
                                     }
                                 }
                             }
@@ -110,19 +110,19 @@ public class StarbondLocketItem extends Item  {
 
     public void swapUpgrade(ItemStack stack, String active, Player player, Level level){
         int pos = Arrays.asList(UPGRADES).indexOf(active);
-        String current = stack.get(Components.LOCKET_MODE);
+        String current = stack.get(Components.PENDANT_MODE);
         if(Arrays.asList(UPGRADES).getLast().equals(current)){
             pos = 0;
         } else {
             pos++;
         }
-        stack.set(Components.LOCKET_MODE, Arrays.asList(UPGRADES).get(pos));
+        stack.set(Components.PENDANT_MODE, Arrays.asList(UPGRADES).get(pos));
         if(!level.isClientSide() && player instanceof ServerPlayer serverPlayer){
             serverPlayer.connection
-                    .send(new ClientboundSetActionBarTextPacket(Component.translatable("item.starbond.starbond_locket.modeSwap", Objects.requireNonNull(stack.get(Components.LOCKET_MODE)).toUpperCase())));
+                    .send(new ClientboundSetActionBarTextPacket(Component.translatable("item.starbond.starbond_pendant.modeSwap", Objects.requireNonNull(stack.get(Components.PENDANT_MODE)).toUpperCase())));
         }
     }
-    public void locketStorage(Level level, Player player, ItemStack stack, BondData data) {
+    public void pendantStorage(Level level, Player player, ItemStack stack, BondData data) {
         player.openMenu(data);
     }
 
@@ -140,11 +140,11 @@ public class StarbondLocketItem extends Item  {
         } else {
             data.setPlayerBTeleportTimer(-1);
         }
-        this.locketTP(level, player, data);
+        this.pendantTP(level, player, data);
         data.setTeleportCooldown(1200);
     }
 
-    public void locketTP(Level level, Player player, BondData data) {
+    public void pendantTP(Level level, Player player, BondData data) {
         UUID playerA = data.playerA();
         UUID playerB = data.playerB();
         if (level.getPlayerInAnyDimension(playerA) != null && level.getPlayerInAnyDimension(playerB) != null) {
@@ -179,24 +179,25 @@ public class StarbondLocketItem extends Item  {
                     level.getPlayerInAnyDimension(playerA) != null &&
                     level.getPlayerInAnyDimension(playerB) != null) {
                 if(data.playerATeleportTimer() == 0 || data.playerBTeleportTimer() == 0){
-                    if(data.otherPlayerTeleporting(owner.getUUID())) {
+                    if(!data.otherPlayerTeleporting(owner.getUUID())) {
                         finishTP(level, (Player) owner, data);
                     }
                 } else if((data.playerATeleportTimer() % 20 == 0 || data.playerBTeleportTimer() % 20 == 0) && data.otherPlayerTeleporting(owner.getUUID())){
                     level.playSound(null, owner.getOnPos(), Sounds.UI_CLICK_FANCY, SoundSource.PLAYERS, 0.5f, 0.9f );
                     if(owner instanceof ServerPlayer player){
+                        Player other = level.getPlayerInAnyDimension(whom(playerA, playerB, player).get(1));
                         player.connection
-                                .send(new ClientboundSetActionBarTextPacket(Component.translatable("item.starbond.starbond_locket.friendIncoming", owner.getName())
-                                        .withColor(LocketTooltipHelper.LOCKET_TOOLTIP_COLORS.get(itemStack.get(Components.LOCKET_TEXTURE)))));
+                                .send(new ClientboundSetActionBarTextPacket(Component.translatable("item.starbond.starbond_pendant.friendIncoming", other.getName())
+                                        .withColor(PendantTooltipHelper.PENDANT_TOOLTIP_COLORS.get(itemStack.get(Components.PENDANT_TEXTURE)))));
                     }
                 }
                 UUID other = whom(playerA, playerB, owner).get(1);
                 float dist = owner.distanceTo(level.getPlayerInAnyDimension(other));
                 if (dist <= 50.0f && level.getPlayerInAnyDimension(other) != null) {
-                    int amp = this.getCamaraderieAmp(itemStack.get(Components.LOCKET_TICKS));
+                    int amp = this.getCamaraderieAmp(itemStack.get(Components.PENDANT_TICKS));
                     ((Player) owner).addEffect(new MobEffectInstance(Starbond.CAMARADERIE, MobEffectInstance.INFINITE_DURATION, amp));
                     data.setTickCamaraderie();
-                    itemStack.set(Components.LOCKET_TICKS, data.camaraderieTicks());
+                    itemStack.set(Components.PENDANT_TICKS, data.camaraderieTicks());
                 } else {
                     ((Player) owner).removeEffect(Starbond.CAMARADERIE);
                 }
@@ -237,7 +238,7 @@ public class StarbondLocketItem extends Item  {
         Entity entity = itemEntity.getOwner();
         Player owner = (entity instanceof Player) ? (Player) entity : null;
         Level level = itemEntity.level();
-        level.playSound(itemEntity, itemEntity.getOnPos(), Sounds.ITEM_LOCKET_SHATTER, SoundSource.NEUTRAL);
+        level.playSound(itemEntity, itemEntity.getOnPos(), Sounds.ITEM_PENDANT_SHATTER, SoundSource.NEUTRAL);
         if(owner != null && !level.isClientSide()){
             int ref = owner.getComponent(CardinalComponents.BOND_REFERENCE).getReference();
             if(ref != 0){
@@ -250,7 +251,7 @@ public class StarbondLocketItem extends Item  {
         BondData data = level.getScoreboard().getComponent(CardinalComponents.BOND).getBondEntry(ref);
         owner.getComponent(CardinalComponents.BOND_REFERENCE).postReference(0);
         owner.removeEffect(Starbond.CAMARADERIE);
-        level.playSound(null, owner.getOnPos(), Sounds.ITEM_LOCKET_SHATTER, SoundSource.NEUTRAL);
+        level.playSound(null, owner.getOnPos(), Sounds.ITEM_PENDANT_SHATTER, SoundSource.NEUTRAL);
         data.activateSuicideMode();
     }
 

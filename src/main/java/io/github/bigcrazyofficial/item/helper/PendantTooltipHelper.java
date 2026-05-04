@@ -5,8 +5,8 @@ import net.minecraft.util.Mth;
 
 import java.util.Map;
 
-public class LocketTooltipHelper {
-    public static final Map<String, Integer> LOCKET_TOOLTIP_COLORS = Map.of(
+public class PendantTooltipHelper {
+    public static final Map<String, Integer> PENDANT_TOOLTIP_COLORS = Map.of(
             "default", ChatFormatting.GRAY.getColor(),
             "red", Mth.hsvToRgb(0.98f, 0.9f, 0.95f),
             "blue", Mth.hsvToRgb(0.63f, 0.75f, 0.95f),

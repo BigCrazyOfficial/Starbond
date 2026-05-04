@@ -1,10 +1,14 @@
 {
-  "locket_shatter": {
-    "subtitle": "sound.starbond.locket_shatter",
-    "sounds": ["starbond:locket_shatter"]
+  "pendant_shatter": {
+    "subtitle": "sound.starbond.pendant_shatter",
+    "sounds": ["starbond:pendant_shatter"]
   },
   "click_fancy": {
     "subtitle": "sound.starbond.click_fancy",
     "sounds": ["starbond:click_fancy"]
+  },
+  "tp_fancy": {
+    "subtitle": "sound.starbond.tp_fancy",
+    "sounds": ["starbond:tp_fancy"]
   }
 }

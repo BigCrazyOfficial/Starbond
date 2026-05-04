@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.bigcrazyofficial.Starbond;
-import io.github.bigcrazyofficial.menu.LocketInventoryMenu;
+import io.github.bigcrazyofficial.menu.PendantInventoryMenu;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.chat.Component;
@@ -166,6 +166,6 @@ public class BondData implements MenuProvider {
 
     @Override
     public @Nullable AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-        return new LocketInventoryMenu(containerId, inventory, this.inventory);
+        return new PendantInventoryMenu(containerId, inventory, this.inventory);
     }
 }

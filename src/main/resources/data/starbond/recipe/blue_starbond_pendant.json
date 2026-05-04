@@ -1,12 +1,12 @@
 {
   "type": "minecraft:smithing_transform",
   "show_notification": false,
-  "base": "starbond:starbond_locket",
+  "base": "starbond:starbond_pendant",
   "addition": "minecraft:blue_dye",
   "result": {
-    "id": "starbond:starbond_locket",
+    "id": "starbond:starbond_pendant",
     "components": {
-      "starbond:locket_texture": "blue"
+      "starbond:pendant_texture": "blue"
     }
   }
 }

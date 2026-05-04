@@ -25,12 +25,12 @@ public class Items {
         Registry.register(BuiltInRegistries.ITEM, itemKey, item);
         return item;
     }
-    public static final Item UNBOUND_LOCKET = register("unbound_locket", UnboundLocketItem::new, new Item.Properties().stacksTo(1));
-    public static final Item STARBOND_LOCKET  = register("starbond_locket", StarbondLocketItem::new, new Item.Properties()
+    public static final Item UNBOUND_PENDANT = register("unbound_pendant", UnboundPendantItem::new, new Item.Properties().stacksTo(1));
+    public static final Item STARBOND_PENDANT  = register("starbond_pendant", StarbondPendantItem::new, new Item.Properties()
             .stacksTo(1)
             .fireResistant()
             .useCooldown(0.5f)
-            .component(Components.LOCKET_TICKS, 0)
-            .component(Components.LOCKET_MODE, "store")
-            .component(Components.LOCKET_TEXTURE, "red"));
+            .component(Components.PENDANT_TICKS, 0)
+            .component(Components.PENDANT_MODE, "store")
+            .component(Components.PENDANT_TEXTURE, "red"));
 }

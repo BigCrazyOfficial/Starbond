@@ -16,8 +16,8 @@ import net.minecraft.world.level.Level;
 import java.time.Instant;
 import java.util.Date;
 
-public class UnboundLocketItem extends Item {
-    public UnboundLocketItem(Properties properties) {
+public class UnboundPendantItem extends Item {
+    public UnboundPendantItem(Properties properties) {
         super(properties);
     }
     @Override
@@ -32,10 +32,10 @@ public class UnboundLocketItem extends Item {
                     level.getScoreboard().getComponent(CardinalComponents.BOND).addBondEntry(i, player.getUUID(), target.getUUID());
                     player.getComponent(CardinalComponents.BOND_REFERENCE).postReference(i);
                     target.getComponent(CardinalComponents.BOND_REFERENCE).postReference(i);
-                    player.addItem(new ItemStack(Items.STARBOND_LOCKET.builtInRegistryHolder(), 1,
-                            DataComponentPatch.builder().set(Components.LOCKET_TEXTURE, "red").build()));
-                    ((Player) target).addItem(new ItemStack(Items.STARBOND_LOCKET.builtInRegistryHolder(), 1,
-                            DataComponentPatch.builder().set(Components.LOCKET_TEXTURE, "blue").build()));
+                    player.addItem(new ItemStack(Items.STARBOND_PENDANT.builtInRegistryHolder(), 1,
+                            DataComponentPatch.builder().set(Components.PENDANT_TEXTURE, "red").build()));
+                    ((Player) target).addItem(new ItemStack(Items.STARBOND_PENDANT.builtInRegistryHolder(), 1,
+                            DataComponentPatch.builder().set(Components.PENDANT_TEXTURE, "blue").build()));
                     itemStack.consume(1, player);
                     return InteractionResult.CONSUME;
                 }
