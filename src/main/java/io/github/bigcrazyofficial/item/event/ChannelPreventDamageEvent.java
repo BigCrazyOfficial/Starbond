@@ -3,6 +3,7 @@ package io.github.bigcrazyofficial.item.event;
 import io.github.bigcrazyofficial.Starbond;
 import io.github.bigcrazyofficial.data.CardinalComponents;
 import io.github.bigcrazyofficial.data.base.BondData;
+import io.github.bigcrazyofficial.item.Items;
 import io.github.bigcrazyofficial.item.StarbondPendantItem;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.minecraft.core.registries.Registries;
@@ -11,13 +12,14 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
+import java.util.Set;
 import java.util.UUID;
 
 public class ChannelPreventDamageEvent {
     public static void illSplitYouFourWays(){
         ServerLivingEntityEvents.ALLOW_DAMAGE.register((entity, source, v) -> {
             Level level = entity.level();
-            if(entity instanceof Player && !level.isClientSide()) {
+            if(entity instanceof Player && !level.isClientSide() && ((Player) entity).getInventory().hasAnyOf(Set.of(Items.STARBOND_PENDANT))) {
                 BondData data = level.getScoreboard().getComponent(CardinalComponents.BOND).getBondEntry(entity.getComponent(CardinalComponents.BOND_REFERENCE).getReference());
                 if (data != null) {
                     UUID uuid = entity.getUUID();
@@ -38,7 +40,7 @@ public class ChannelPreventDamageEvent {
 
         ServerLivingEntityEvents.ALLOW_DEATH.register(((entity, damageSource, damageAmount) -> {
             Level level = entity.level();
-            if(entity instanceof Player && !level.isClientSide()) {
+            if(entity instanceof Player && !level.isClientSide() && ((Player) entity).getInventory().hasAnyOf(Set.of(Items.STARBOND_PENDANT))) {
                 BondData data = level.getScoreboard().getComponent(CardinalComponents.BOND).getBondEntry(entity.getComponent(CardinalComponents.BOND_REFERENCE).getReference());
                 if (data != null) {
                     UUID uuid = entity.getUUID();

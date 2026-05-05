@@ -3,6 +3,7 @@ package io.github.bigcrazyofficial;
 import io.github.bigcrazyofficial.item.event.ChannelPreventDamageEvent;
 import io.github.bigcrazyofficial.item.Items;
 import io.github.bigcrazyofficial.item.data.Components;
+import io.github.bigcrazyofficial.menu.MenuTypes;
 import net.fabricmc.api.ModInitializer;
 
 import net.minecraft.core.Holder;
@@ -50,6 +51,7 @@ public class Starbond implements ModInitializer {
 		Items.initialize();
 		Sounds.initialize();
 		Components.initialize();
+		MenuTypes.initialize();
 		ChannelPreventDamageEvent.illSplitYouFourWays();
 
 	}

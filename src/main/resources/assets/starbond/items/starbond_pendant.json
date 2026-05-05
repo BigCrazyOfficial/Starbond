@@ -38,6 +38,41 @@
           "type": "minecraft:model",
           "model": "starbond:item/starbond_pendant_magenta"
         }
+      },
+      {
+        "when": "gold",
+        "model": {
+          "type": "minecraft:model",
+          "model": "starbond:item/starbond_pendant_gold"
+        }
+      },
+      {
+        "when": "gay",
+        "model": {
+          "type": "minecraft:model",
+          "model": "starbond:item/starbond_pendant_gay"
+        }
+      },
+      {
+        "when": "lesbian",
+        "model": {
+          "type": "minecraft:model",
+          "model": "starbond:item/starbond_pendant_lesbian"
+        }
+      },
+      {
+        "when": "trans",
+        "model": {
+          "type": "minecraft:model",
+          "model": "starbond:item/starbond_pendant_trans"
+        }
+      },
+      {
+        "when": "nb",
+        "model": {
+          "type": "minecraft:model",
+          "model": "starbond:item/starbond_pendant_nb"
+        }
       }
     ]
   }

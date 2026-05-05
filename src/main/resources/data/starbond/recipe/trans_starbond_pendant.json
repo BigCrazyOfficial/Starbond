@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smithing_transform",
+  "show_notification": false,
+  "base": "starbond:starbond_pendant",
+  "addition": "minecraft:egg",
+  "result": {
+    "id": "starbond:starbond_pendant",
+    "components": {
+      "starbond:pendant_texture": "trans"
+    }
+  }
+}

@@ -7,7 +7,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 
 public class MenuTypes {
-
     public static final MenuType<PendantInventoryMenu> PENDANT_INVENTORY = register("pendant_inventory", PendantInventoryMenu::new);
     public static <T extends AbstractContainerMenu> MenuType<T> register(
             String name,
@@ -15,4 +14,5 @@ public class MenuTypes {
     ) {
         return Registry.register(BuiltInRegistries.MENU, name, new MenuType<>(constructor, FeatureFlagSet.of()));
     }
+    public static void initialize(){}
 }
